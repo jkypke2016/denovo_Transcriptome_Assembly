@@ -10,7 +10,8 @@
 
 Raw reads are assembled with and without using available trimming options.  
 Quality checks are performed after successful assembly.  
-  
+
+All scripts are made for the type of data I am working with. My primary material is RNA-seq data, PolyA paired-end reads from Illumina. All samples (read files) are named systematically, so that scripts can be written that are able to process a lot of files simultaneously/ successively.  Each sample starts with it's name which is a unique identifier, which will be called **TAG** in the scripts, then another identifier, **R1 or R2**, which are forward and reverse strands respectively. Other endings denote the file type , e.g. `.fastq `.  
 ## *De-novo* assembly using Trinity
  
 ## *De-novo* assembly using SOAPdenovo-trans
