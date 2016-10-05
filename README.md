@@ -1,27 +1,55 @@
-# *De-novo* Transcriptome Assembly
-
- **This repository contains all steps (including scripts) needed to de-novo assemble transcriptomes from raw reads.**
- 
-## Overview
- 
- Two different _de-novo_ transcriptome assemblers are compared:
- * [Trinity] (https://github.com/trinityrnaseq/trinityrnaseq/wiki) 
- * [SOAPdenovo-Trans] (https://sourceforge.net/projects/soapdenovotrans/files/SOAPdenovo-Trans/)    
-
-Raw reads are assembled with and without using available trimming options.  
-Quality checks are performed after successful assembly.  
-  
 ## *De-novo* assembly using Trinity
 
-### After successful assembly & quality check
+### Preparation of the data before assembly
 
-Trinty suggests to check a few things to get a better idea on **how many expressed genes/ transcripts are really there**. This information is taken from the [Trinity] (https://github.com/trinityrnaseq/trinityrnaseq/wiki/Trinity-FAQ#ques_sra_fq_conversion) page.
- * *Examine counts of transcripts/ genes vs. the minimum expression thresholds*. This lets you count the number that reflect the majority of reads (even with little read support). Further instructions on how to do this can be found [here] (https://github.com/trinityrnaseq/trinityrnaseq/wiki/Trinity-Transcript-Quantification)
- * Entries with >= ~1 fpkm / tpm tend to be heavily enriched for transcripts and would typically be annotated in a genome annotation
- * Calculate the contig Ex90N50 value
-   * contig N50: is computed based on transcript contigs representing the top 90% of expressed transcripts
-   * Ex90 count of transcripts: is the number of that represent this top 90% of expression data
-   * Click [here] (https://github.com/trinityrnaseq/trinityrnaseq/wiki/Transcriptome-Contig-Nx-and-ExN50-stats) for more information on contig Ex90N50 value  
+Trinity requires `.fastq` files (gzipped files `.fastq.gz` are okay as well) for the assembly. However, it is picky when it comes to the information contained in the header of your fastq files and the way how the header was formatted. Starting with raw reads from, e.g. an Illumina run, this should not be a problem but if the primary material is an SRA study then make sure you check the headers are okay.  
+
+##### Converting SRA to FASTQ
+SRA files can easily be converted to fastq files. All you need is `sra-tools` which you can get like so:  
+```javascript
+git clone https://github.com/ncbi/sra-tools
+```
+After downloading, go to the directory that contains the executable for sra-tools and run `./configure`, then `make` to install. To convert SRAs to FASTQs you need `fastq-dump`, which is part of `sra-tools`. Find the directory that contains the fastq-dump executable and copy the path of this directory into your home `.bashrc` file:
+```javascript
+    export PATH=/home/usr/ncbi-outdir/sra-tools/linux/gcc/x86_64/rel/bin:$PATH  
+    bash # restarts your shell & makes changes active  
+```
+Now you are ready to **convert a bunch of SRA files into FASTQ files** using the `SRAtoFASTQ.sh` script:  
+```javascript
+#!/bin/sh
+
+for i in *.sra
+do
+ fastq-dump --split-3 $i &
+ echo "Now converting file $i"
+ sleep 3m
+done
+```
+Sometimes SRA files have additional information that is redudant for trinity and needs to be removed or else trinity will show you an error. In my case the header started with the name of the seqencing run (SRR...) and the information on the read length (length=100). If those are removed it will work just fine. The following script called  `prep_fastq_for_trinity.sh` does the job.
+```javascript
+#!/bin/bash 
+
+for i in *R1.fastq
+do
+  TAG=${i%%.R1.fastq}
+  awk '{if (NR%4==1) {print "@"$2} else if (NR%4==3) {print "+"} else {print}}' $i > $TAG.prepped.R1.fastq & 
+  echo "Done processing $i..." 
+done
+wait 
+
+for i in *R2.fastq
+do
+  TAG=${i%%.R2.fastq}
+  awk '{if (NR%4==1) {print "@"$2} else if (NR%4==3) {print "+"} else {print}}' $i > $TAG.prepped.R2.fastq &
+  echo "Done processing $i..." 
+done 
+wait 
+```
+
+
+
+### After successful assembly & quality check
+ 
 
 
 ## *De-novo* assembly using SOAPdenovo-trans
