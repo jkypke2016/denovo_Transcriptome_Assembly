@@ -6,7 +6,8 @@
  
  Two different _de-novo_ transcriptome assemblers are compared:
  * [Trinity] (https://github.com/trinityrnaseq/trinityrnaseq/wiki) 
- * [SOAPdenovo-Trans] (https://sourceforge.net/projects/soapdenovotrans/files/SOAPdenovo-Trans/)  
+ * [SOAPdenovo-Trans] (https://sourceforge.net/projects/soapdenovotrans/files/SOAPdenovo-Trans/)    
+
 Raw reads are assembled with and without using available trimming options.  
 Quality checks are performed after successful assembly.  
   
