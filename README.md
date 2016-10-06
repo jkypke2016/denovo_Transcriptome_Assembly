@@ -27,7 +27,7 @@ All scripts are made for the type of data I am working with. My primary material
 
 ### Performing quality checks
 
-### After successful assembly & quality check
+### After successful assembly & quality checks
  
 ## *De-novo* assembly using SOAPdenovo-trans
  
