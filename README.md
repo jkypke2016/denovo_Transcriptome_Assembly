@@ -2,57 +2,16 @@
 
 ### Preparation of the data before assembly
 
-Trinity requires `.fastq` files (gzipped files `.fastq.gz` are okay as well) for the assembly. However, it is picky when it comes to the information contained in the header of your fastq files and the way how the header was formatted. Starting with raw reads from, e.g. an Illumina run, this should not be a problem but if the primary material is an SRA study then make sure you check the headers are okay.  
 
-##### Converting SRA to FASTQ
-SRA files can easily be converted to fastq files. All you need is `sra-tools` which you can get like so:  
-```javascript
-git clone https://github.com/ncbi/sra-tools
-```
-After downloading, go to the directory that contains the executable for sra-tools and run `./configure`, then `make` to install. To convert SRAs to FASTQs you need `fastq-dump`, which is part of `sra-tools`. Find the directory that contains the fastq-dump executable and copy the path of this directory into your home `.bashrc` file:
-```javascript
-    export PATH=/home/usr/ncbi-outdir/sra-tools/linux/gcc/x86_64/rel/bin:$PATH  
-    bash # restarts your shell & makes changes active  
-```
-Now you are ready to **convert a bunch of SRA files into FASTQ files** using the `SRAtoFASTQ.sh` script:  
-```javascript
-#!/bin/sh
+### Running Trinity
 
-for i in *.sra
-do
- fastq-dump --split-3 $i &
- echo "Now converting file $i"
- sleep 3m
-done
-```
-##### Prepping FASTQ files obtained from SRAs for Trinity   
-Sometimes SRA files have additional information that is redudant for trinity and needs to be removed or else trinity will show you an error. In my case the header started with the name of the seqencing run (SRR...) and the information on the read length (length=100). If those are removed it will work just fine. The following script called  `prep_fastq_for_trinity.sh` does the job.
-```javascript
-#!/bin/bash 
-
-for i in *R1.fastq
-do
-  TAG=${i%%.R1.fastq}
-  awk '{if (NR%4==1) {print "@"$2} else if (NR%4==3) {print "+"} else {print}}' $i > $TAG.prepped.R1.fastq & 
-  echo "Done processing $i..." 
-done
-wait 
-
-for i in *R2.fastq
-do
-  TAG=${i%%.R2.fastq}
-  awk '{if (NR%4==1) {print "@"$2} else if (NR%4==3) {print "+"} else {print}}' $i > $TAG.prepped.R2.fastq &
-  echo "Done processing $i..." 
-done 
-wait 
-```
-After running this cript, make sure you check that all headers were converted correctly to avoid trinity to fail and not knowing why. Do this you run the follwoing caommnds:  
-
-
-If you have several read files belonging to one organism = one Transcriptome that you want to assemble, then you can concatenate the files to run them in one go with Trinity. You can do this using `nohup zcat *.R1.fastq.gz > All_files.R1.fastq &` to zip-conctenate all R1 (e.g. forward) read files. Do the same for all R2 (e.g. reverse) read files.  As they will probably be huge files, you might want to concatenate them again to save disk space.
-
-
-### After successful assembly & quality check
+##### Things to be aware of
+  * If you run out of HDD space  on your server, the assembly job will just fail - even if it was running for 3 days already. So **check how much free space is available before running a job**. You can do this using `df -h`. 
+  * It is natural with RNA-seq data that the coverage of some reads will vastly exceed that of others, simply because at any point in time some genes are more expressed than others leading to a very uneven coverage  of reads after sequencing. To balance this out a little bit it is suggested to **use the nomalization function (`--normalize_reads`)** in Trinity which reduces any read coverage to a maximum of 50x.
+  * Be aware of the amount of **CPUs** you can use (I am running everything on 16 CPUs)
+  * Trinity will even assemble your paired-end reads if you don't know their strandedness and you be aware that **treating your reads as non-stranded is the deafult setting**. So if your data is stranded don't forget to include the setting `--SS_lib_type`.  
+  
+.### After successful assembly & quality check
  
 
 
