@@ -25,6 +25,7 @@ do
  sleep 3m
 done
 ```
+##### Prepping FASTQ files obtained from SRAs for Trinity   
 Sometimes SRA files have additional information that is redudant for trinity and needs to be removed or else trinity will show you an error. In my case the header started with the name of the seqencing run (SRR...) and the information on the read length (length=100). If those are removed it will work just fine. The following script called  `prep_fastq_for_trinity.sh` does the job.
 ```javascript
 #!/bin/bash 
@@ -45,7 +46,10 @@ do
 done 
 wait 
 ```
+After running this cript, make sure you check that all headers were converted correctly to avoid trinity to fail and not knowing why. Do this you run the follwoing caommnds:  
 
+
+If you have several read files belonging to one organism = one Transcriptome that you want to assemble, then you can concatenate the files to run them in one go with Trinity. You can do this using `nohup zcat *.R1.fastq.gz > All_files.R1.fastq &` to zip-conctenate all R1 (e.g. forward) read files. Do the same for all R2 (e.g. reverse) read files.  As they will probably be huge files, you might want to concatenate them again to save disk space.
 
 
 ### After successful assembly & quality check
