@@ -1,5 +1,18 @@
 ## *De-novo* assembly using Trinity
 
+**This repository contains all steps (including scripts) needed to de-novo assemble transcriptomes from raw reads.**
+ 
+## Overview
+ 
+ Two different _de-novo_ transcriptome assemblers are compared:
+ * [Trinity] (https://github.com/trinityrnaseq/trinityrnaseq/wiki) 
+ * [SOAPdenovo-Trans] (https://sourceforge.net/projects/soapdenovotrans/files/SOAPdenovo-Trans/)    
+
+Raw reads are assembled with and without using available trimming options.  
+Quality checks are performed after successful assembly.  
+
+All scripts are made for the type of data I am working with. My primary material is RNA-seq data, PolyA paired-end reads from Illumina. All samples (read files) are named systematically, so that scripts can be written that are able to process a lot of files simultaneously/ successively.  Each sample starts with it's name which is a unique identifier, which will be called **TAG** in the scripts, then another identifier, **R1 or R2**, which are forward and reverse strands respectively. Other endings denote the file type , e.g. `.fastq `.  
+
 ### Preparation of the data before assembly
 
 
@@ -11,7 +24,7 @@
   * Be aware of the amount of **CPUs** you can use (I am running everything on 16 CPUs)
   * Trinity will even assemble your paired-end reads if you don't know their strandedness and you be aware that **treating your reads as non-stranded is the deafult setting**. So if your data is stranded don't forget to include the setting `--SS_lib_type`.  
   
-.### After successful assembly & quality check
+### After successful assembly & quality check
  
 
 
