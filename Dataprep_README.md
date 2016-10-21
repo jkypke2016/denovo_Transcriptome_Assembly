@@ -16,7 +16,6 @@ All scripts are made for the type of data I am working with. My primary material
 ## *De-novo* assembly using Trinity
 
 ### Preparation of the data before assembly
-
 Trinity requires `.fastq` files (gzipped files `.fastq.gz` are okay as well) for the assembly. However, it is picky when it comes to the information contained in the header of your fastq files and the way how the header was formatted. Starting with raw reads from, e.g. an Illumina run, this should not be a problem but if the primary material is an SRA study then make sure you check the headers are okay.  
 
 ##### Converting SRA to FASTQ
@@ -64,12 +63,4 @@ wait
 After running this cript, make sure you check that all headers were converted correctly to avoid trinity to fail and not knowing why. Do this you run the follwoing caommnds:  
 
 
-If you have several read files belonging to one organism = one Transcriptome that you want to assemble, then you can concatenate the files to run them in one go with Trinity. You can do this using `nohup zcat *.R1.fastq.gz > All_files.R1.fastq &` to zip-conctenate all R1 (e.g. forward) read files. Do the same for all R2 (e.g. reverse) read files.  As they will probably be huge files, you might want to concatenate them again to save disk space.
-
-
-### After successful assembly & quality check
- 
-
-
-## *De-novo* assembly using SOAPdenovo-trans
- 
+If you have several read files belonging to one organism = one Transcriptome that you want to assemble, then you can concatenate the files to run them in one go with Trinity. You can do this using `nohup zcat *.R1.fastq.gz > All_files.R1.fastq &` to zip-conctenate all R1 (e.g. forward) read files. Do the same for all R2 (e.g. reverse) read files.  As they will probably be huge files, you might want to zip them again to save disk space.
