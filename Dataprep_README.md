@@ -63,4 +63,4 @@ wait
 After running this cript, make sure you check that all headers were converted correctly to avoid trinity to fail and not knowing why. Do this you run the follwoing caommnds:  
 
 
-If you have several read files belonging to one organism = one Transcriptome that you want to assemble, then you can concatenate the files to run them in one go with Trinity. You can do this using `nohup zcat *.R1.fastq.gz > All_files.R1.fastq &` to zip-conctenate all R1 (e.g. forward) read files. Do the same for all R2 (e.g. reverse) read files.  As they will probably be huge files, you might want to zip them again to save disk space.
+If you have several read files belonging to one organism = one Transcriptome that you want to assemble, then you can concatenate the files to run them in one go with Trinity. You can do this using `nohup zcat *.R1.fastq.gz > All_files.R1.fastq &` to zip-conctenate all R1 (e.g. forward) read files. Do the same for all R2 (e.g. reverse) read files.  As they will probably be huge files, you might want to zip them again to save disk space.  
